@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_more"
+        android:title="Options"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/new_game"
+                android:title="New Game"
+                android:icon="@drawable/ic_new"
+                />
+            <item android:id="@+id/ai_difficulty"
+                android:title="Difficulty"
+                android:icon="@drawable/ic_difficult"
+                />
+            <item android:id="@+id/quit"
+                android:title="Quit"
+                android:icon="@drawable/ic_quit"
+                />
+            <item android:id="@+id/about"
+                android:title="About"
+                android:icon="@drawable/ic_about"
+                />
+        </menu>
+    </item>
+</menu>

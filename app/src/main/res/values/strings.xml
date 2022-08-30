@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="your_turn">It is your turn</string>
+    <string name="my_turn">It is my turn</string>
+    <string name="tie">It is a Tie</string>
+    <string name="you_win">You win</string>
+    <string name="i_win">I win</string>
+    <string name="info">Text</string>
+    <string name="ties">0</string>
+    <string name="my_count">0</string>
+    <string name="your_count">0</string>
+    <string name="tie_text">Ties:</string>
+    <string name="my_count_text">My Count:</string>
+    <string name="your_count_text">Your Count:</string>
+    <string name="difficulty_choose">Choose a difficulty level</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_harder">Harder</string>
+    <string name="difficulty_expert">Expert</string>
+    <string name="quit_question">Are you sure you want to quit</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="about_title">Tic Tac Toe, by Unknown</string>
+    <string name="about_text">Choose from one of three difficult levels, do not let Android beat you</string>
+</resources>
