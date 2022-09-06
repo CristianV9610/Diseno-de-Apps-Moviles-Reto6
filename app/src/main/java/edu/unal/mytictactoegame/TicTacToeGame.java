@@ -33,9 +33,12 @@ public class TicTacToeGame {
         Arrays.fill(mBoard, OPEN_SPOT);
     }
 
-    public void setMove(char player, int location){
-        if (mBoard[location] == OPEN_SPOT)
+    public boolean setMove(char player, int location){
+        if (location >= 0 && location < BoardSize && mBoard[location] == OPEN_SPOT){
             mBoard[location]= player;
+            return true;
+        }
+        return false;
     }
 
     private int getRandomMove(){
@@ -158,6 +161,10 @@ public class TicTacToeGame {
 
         // If we make it through the previous loop, all places are taken, so it's a tie
         return 1;
+    }
+
+    public int getBoardOccupant(int pos){
+        return mBoard[pos];
     }
 
 }
