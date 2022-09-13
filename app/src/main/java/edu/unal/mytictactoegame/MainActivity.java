@@ -4,22 +4,23 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
+//import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
+//import androidx.fragment.app.DialogFragment;
 
 import android.view.MotionEvent;
 import android.view.View;
 
-import android.widget.Button;
+//import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,19 +28,20 @@ public class MainActivity extends AppCompatActivity {
 
     private TicTacToeGame mGame;
     private BoardView mBoardView;
-
     private TextView mInfoTextView;
     private TextView mTieCountView;
     private TextView mYourCountView;
     private TextView mMyCountView;
+    private SharedPreferences mPrefs;
 
     private boolean mGameOver;
     private int mYourCount;
     private int mMyCount;
     private int mTieCount;
+    private int mDifficulty;
 
     static final int DIALOG_DIFFICULTY_ID = 0;
-    static final int DIALOG_QUIT_ID = 1;
+    static final int DIALOG_RESET_ID = 1;
     static final int DIALOG_ABOUT_ID = 2;
 
     MediaPlayer mHumanMediaPlayer;
@@ -142,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-
     private void startNewGame(){
 
         mGame.clearBoard();
@@ -165,6 +165,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    private void displayScores(){
+        mMyCountView.setText(String.valueOf(mMyCount));
+        mYourCountView.setText(String.valueOf(mYourCount));
+        mTieCountView.setText(String.valueOf(mTieCount));
     }
 
     @Override
@@ -192,18 +198,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-//        mBoardButtons = new Button[TicTacToeGame.BoardSize];
-//        mBoardButtons[0] = findViewById(R.id.one);
-//        mBoardButtons[1] = findViewById(R.id.two);
-//        mBoardButtons[2] = findViewById(R.id.three);
-//        mBoardButtons[3] = findViewById(R.id.four);
-//        mBoardButtons[4] = findViewById(R.id.five);
-//        mBoardButtons[5] = findViewById(R.id.six);
-//        mBoardButtons[6] = findViewById(R.id.seven);
-//        mBoardButtons[7] = findViewById(R.id.eight);
-//        mBoardButtons[8] = findViewById(R.id.nine);
+        mPrefs = getSharedPreferences("ttt_prefs" , MODE_PRIVATE);
+        mYourCount = mPrefs.getInt("mYourCount", 0);
+        mMyCount = mPrefs.getInt("mMyCount", 0);
+        mTieCount = mPrefs.getInt("mTieCount", 0);
+        mDifficulty = mPrefs.getInt("mDifficulty", 2);
 
         mInfoTextView = findViewById(R.id.information);
         mTieCountView = findViewById(R.id.tiecount);
@@ -214,14 +216,37 @@ public class MainActivity extends AppCompatActivity {
         mBoardView = findViewById(R.id.board);
         mBoardView.setGame(mGame);
 
-        mYourCount = 0;
-        mMyCount = 0;
-        mTieCount = 0;
-
         mBoardView.setOnTouchListener(mTouchListener);
 
+        if (savedInstanceState == null){
+            startNewGame();
+        }
 
-        startNewGame();
+        else {
+            mGame.setBoardState(savedInstanceState.getCharArray("board"));
+            mGameOver = savedInstanceState.getBoolean("mGameOver");
+            mInfoTextView.setText(savedInstanceState.getCharSequence("info"));
+            mYourCount = savedInstanceState.getInt("mYourCount") ;
+            mMyCount = savedInstanceState.getInt("mMyCount");
+            mTieCount = savedInstanceState.getInt("mTieCount");
+            mDifficulty = savedInstanceState.getInt("mDifficulty");
+            //mGoFirst = savedInstanceState.getChar("mGoFirst");
+        }
+
+        switch(mDifficulty) {
+            case 0:
+                mGame.setDifficulty(TicTacToeGame.Difficulty.Easy);
+                break;
+            case 1:
+                mGame.setDifficulty(TicTacToeGame.Difficulty.Harder);
+                break;
+            case 2:
+                mGame.setDifficulty(TicTacToeGame.Difficulty.Expert);
+                break;
+        }
+
+        displayScores();
+
     }
 
     @Override
@@ -242,8 +267,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.ai_difficulty:
                 showDialog(DIALOG_DIFFICULTY_ID);
                 return true;
-            case R.id.quit:
-                showDialog(DIALOG_QUIT_ID);
+            case R.id.reset_scores:
+                showDialog(DIALOG_RESET_ID);
                 return true;
             case R.id.about:
                 showDialog(DIALOG_ABOUT_ID);
@@ -256,9 +281,7 @@ public class MainActivity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id){
         Dialog dialog = null;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        int selected = 2;
-        TicTacToeGame.Difficulty DifficultyLevel;
-
+        //mDifficulty = 2;
         switch(id) {
             case DIALOG_DIFFICULTY_ID:
                 builder.setTitle(R.string.difficulty_choose);
@@ -268,12 +291,11 @@ public class MainActivity extends AppCompatActivity {
                         getResources().getString(R.string.difficulty_expert)
                 };
 
-                DifficultyLevel = mGame.getDifficultyLevel();
-
-                builder.setSingleChoiceItems(levels, selected,
+                builder.setSingleChoiceItems(levels, mDifficulty,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
                                 dialog.dismiss();
+                                mDifficulty = item;
                                 switch(item) {
                                     case 0:
                                         mGame.setDifficulty(TicTacToeGame.Difficulty.Easy);
@@ -292,12 +314,16 @@ public class MainActivity extends AppCompatActivity {
                         });
                 dialog = builder.create();
                 break;
-            case DIALOG_QUIT_ID:
-                builder.setMessage(R.string.quit_question)
+
+            case DIALOG_RESET_ID:
+                builder.setMessage(R.string.scores_reset)
                         .setCancelable(false)
                         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id){
-                                MainActivity.this.finish();
+                                mYourCount = 0;
+                                mMyCount = 0;
+                                mTieCount = 0;
+                                displayScores();;
                             }
                         })
                         .setNegativeButton(R.string.no, null);
@@ -317,6 +343,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putCharArray("board", mGame.getBoardState());
+        outState.putBoolean("mGameOver", mGameOver);
+        outState.putInt("mYourCount", mYourCount);
+        outState.putInt("mMyCount", mMyCount);
+        outState.putInt("mTieCount", mTieCount);
+        outState.putCharSequence("info", mInfoTextView.getText());
+        //outState.putChar("");
+
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mGame.setBoardState(savedInstanceState.getCharArray("board"));
+        mGameOver = savedInstanceState.getBoolean("mGameOver");
+        mInfoTextView.setText(savedInstanceState.getCharSequence("info"));
+        mYourCount = savedInstanceState.getInt("mYourCount");
+        mMyCount = savedInstanceState.getInt("mMyCount");
+        mTieCount = savedInstanceState.getInt("mTieCount");
+        mDifficulty = savedInstanceState.getInt("mDifficulty");
+
+        //mGoFirst = savedInstanceState.getChar("mGoFirst");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putInt("mYourCount", mYourCount);
+        ed.putInt("mMyCount", mMyCount);
+        ed.putInt("mTieCount", mTieCount);
+        ed.putInt("mDifficulty", mDifficulty);
+        ed.commit();
+
+    }
 
 
 

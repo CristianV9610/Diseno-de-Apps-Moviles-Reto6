@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Cristian/AndroidStudioProjects/MyTicTacToeGame/app/src/main/res/drawable/ic_quit.xml" value="0.1" />
+        <entry key="..\:/Users/Cristian/AndroidStudioProjects/MyTicTacToeGame/app/src/main/res/drawable/ic_reset.xml" value="0.1345" />
+        <entry key="..\:/Users/Cristian/AndroidStudioProjects/MyTicTacToeGame/app/src/main/res/layout-land/activity_main.xml" value="0.11299435028248588" />
         <entry key="..\:/Users/Cristian/AndroidStudioProjects/MyTicTacToeGame/app/src/main/res/layout/about_dialog.xml" value="0.1" />
         <entry key="..\:/Users/Cristian/AndroidStudioProjects/MyTicTacToeGame/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Cristian/AndroidStudioProjects/MyTicTacToeGame/app/src/main/res/menu/options_menu.xml" value="0.1" />
       </map>
     </option>
   </component>

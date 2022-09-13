@@ -1,27 +1,28 @@
 package edu.unal.mytictactoegame;
 
+import android.content.SharedPreferences;
+
 import java.util.Random;
 import java.util.Arrays;
 
 public class TicTacToeGame {
 
-    private char mBoard[] = {'1','2','3','4','5','6','7','8','9'};
     public static final char HUMAN_PLAYER = 'O';
     public static final char COMPUTER_PLAYER = 'X';
     public static final char OPEN_SPOT = ' ';
     public static final int BoardSize = 9;
 
+    public enum Difficulty {Easy, Harder, Expert}
+
     private Random mRand;
-
-    public enum Difficulty {Easy, Harder, Expert};
-
+    private char mBoard[] = {'1','2','3','4','5','6','7','8','9'};
     private static Difficulty mDifficultyLevel = Difficulty.Expert;
 
-    public  Difficulty getDifficultyLevel() {
+    public Difficulty getDifficultyLevel() {
         return mDifficultyLevel;
     }
 
-    public  void setDifficulty(Difficulty difficulty) {
+    public void setDifficulty(Difficulty difficulty) {
         mDifficultyLevel = difficulty;
     }
 
@@ -166,6 +167,15 @@ public class TicTacToeGame {
     public int getBoardOccupant(int pos){
         return mBoard[pos];
     }
+
+    public char[] getBoardState() {
+        return mBoard;
+    }
+
+    public void setBoardState(char[] mBoard) {
+        this.mBoard = mBoard;
+    }
+
 
 }
 

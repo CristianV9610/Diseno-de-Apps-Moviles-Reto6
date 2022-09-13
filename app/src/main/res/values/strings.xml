@@ -18,6 +18,8 @@
     <string name="difficulty_expert">Expert</string>
     <string name="quit_question">Are you sure you want to quit</string>
     <string name="yes">Yes</string>
+    <string name="ok">Ok</string>
+    <string name="scores_reset">Are you sure you want to reset scores?</string>
     <string name="no">No</string>
     <string name="about_title">Tic Tac Toe, by Unknown</string>
     <string name="about_text">Choose from one of three difficult levels, do not let Android beat you</string>
